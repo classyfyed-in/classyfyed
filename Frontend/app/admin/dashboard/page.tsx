@@ -16,7 +16,6 @@ import {
   XCircle,
   Eye,
 } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -40,6 +39,7 @@ interface Student {
   role: "STUDENT" | "FACULTY"
   instituteId: string
   mobile: string
+  email: string
   appliedOn: string
   idCardFront: string
   idCardBack: string
@@ -58,17 +58,37 @@ interface Vendor {
   createdAt: string
 }
 
+interface Product {
+  _id: string
+  images: string[]
+  genericName: string
+  originalPrice: number
+  discountPrice: number
+  category: string
+  stock: number
+  sales: number
+  model: string
+  color: string
+  weight: string
+  variants: { key: string; value: string }[]
+  description: string
+  reviews: { rating: number; comment: string; user: string }[]
+  status: string
+}
+
 export default function AdminDashboard() {
   const [pendingVerifications, setPendingVerifications] = useState<Student[]>([])
   const [pendingVendors, setPendingVendors] = useState<Vendor[]>([])
+  const [pendingProducts, setPendingProducts] = useState<Product[]>([])
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isStudentDialogOpen, setIsStudentDialogOpen] = useState(false)
   const [isVendorDialogOpen, setIsVendorDialogOpen] = useState(false)
+  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const BASE_URL=process.env.NEXT_PUBLIC_BASE_URL
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || ""
 
-  // Fetch unverified users and vendors
   useEffect(() => {
     const fetchUnverifiedUsers = async () => {
       try {
@@ -78,7 +98,7 @@ export default function AdminDashboard() {
         })
         const data = await response.json()
         if (data.success) {
-          setPendingVerifications(data.users)
+          setPendingVerifications(data.users || [])
         } else {
           console.error("AdminDashboard - Failed to fetch users:", data.message)
           setError(data.message || "Failed to fetch users")
@@ -97,7 +117,7 @@ export default function AdminDashboard() {
         })
         const data = await response.json()
         if (data.success) {
-          setPendingVendors(data.vendors)
+          setPendingVendors(data.vendors || [])
         } else {
           console.error("AdminDashboard - Failed to fetch vendors:", data.message)
           setError(data.message || "Failed to fetch vendors")
@@ -108,8 +128,28 @@ export default function AdminDashboard() {
       }
     }
 
+    const fetchUnverifiedProducts = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/product/unverified`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+        const data = await response.json()
+        if (data.success) {
+          setPendingProducts(data.products || [])
+        } else {
+          console.error("AdminDashboard - Failed to fetch products:", data.message)
+          setError(data.message || "Failed to fetch products")
+        }
+      } catch (err) {
+        console.error("AdminDashboard - Error fetching products:", err)
+        setError("Error fetching products")
+      }
+    }
+
     fetchUnverifiedUsers()
     fetchUnverifiedVendors()
+    fetchUnverifiedProducts()
   }, [BASE_URL])
 
   const viewStudentDetails = (student: Student) => {
@@ -120,6 +160,11 @@ export default function AdminDashboard() {
   const viewVendorDetails = (vendor: Vendor) => {
     setSelectedVendor(vendor)
     setIsVendorDialogOpen(true)
+  }
+
+  const viewProductDetails = (product: Product) => {
+    setSelectedProduct(product)
+    setIsProductDialogOpen(true)
   }
 
   const approveUser = async (userId: string) => {
@@ -204,9 +249,50 @@ export default function AdminDashboard() {
     }
   }
 
+  const approveProduct = async (productId: string) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/product/${productId}/verify`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "active" }),
+      })
+      const data = await response.json()
+      if (data.success) {
+        setPendingProducts((prev) => prev.filter((product) => product._id !== productId))
+        setIsProductDialogOpen(false)
+        alert("Product Verified Successfully!")
+      } else {
+        console.error("AdminDashboard - Failed to approve product:", data.message)
+        setError(data.message || "Failed to approve product")
+      }
+    } catch (err) {
+      console.error("AdminDashboard - Error approving product:", err)
+      setError("Error approving product")
+    }
+  }
+
+  const rejectProduct = async (productId: string) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/product/products/${productId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      })
+      const data = await response.json()
+      if (data.success) {
+        setPendingProducts((prev) => prev.filter((product) => product._id !== productId))
+        setIsProductDialogOpen(false)
+      } else {
+        console.error("AdminDashboard - Failed to reject product:", data.message)
+        setError(data.message || "Failed to reject product")
+      }
+    } catch (err) {
+      console.error("AdminDashboard - Error rejecting product:", err)
+      setError("Error rejecting product")
+    }
+  }
+
   return (
     <div className="flex h-screen bg-muted/30">
-      {/* Sidebar */}
       <div className="hidden md:flex w-64 flex-col bg-card border-r h-full">
         <div className="p-4 border-b">
           <h2 className="font-bold text-xl">Admin Dashboard</h2>
@@ -260,9 +346,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top navigation */}
         <header className="bg-card border-b">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center md:hidden">
@@ -310,7 +394,6 @@ export default function AdminDashboard() {
           </div>
         </header>
 
-        {/* Dashboard content */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Dashboard Overview</h1>
@@ -329,7 +412,9 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Pending Verifications</p>
-                    <h3 className="text-2xl font-bold mt-1">{pendingVerifications.length + pendingVendors.length}</h3>
+                    <h3 className="text-2xl font-bold mt-1">
+                      {pendingVerifications.length + pendingVendors.length}
+                    </h3>
                   </div>
                   <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                     <Users className="h-6 w-6 text-primary" />
@@ -342,7 +427,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Pending Products</p>
-                    <h3 className="text-2xl font-bold mt-1">12</h3>
+                    <h3 className="text-2xl font-bold mt-1">{pendingProducts.length}</h3>
                   </div>
                   <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                     <ShoppingBag className="h-6 w-6 text-primary" />
@@ -381,13 +466,14 @@ export default function AdminDashboard() {
           <Card className="mb-6">
             <CardHeader>
               <CardTitle>Verification Requests</CardTitle>
-              <CardDescription>Manage student and vendor verification requests</CardDescription>
+              <CardDescription>Manage student, vendor, and product verification requests</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="students">
                 <TabsList className="mb-4">
                   <TabsTrigger value="students">Students/Faculty ({pendingVerifications.length})</TabsTrigger>
                   <TabsTrigger value="vendors">Vendors ({pendingVendors.length})</TabsTrigger>
+                  <TabsTrigger value="products">Products ({pendingProducts.length})</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="students">
@@ -517,13 +603,68 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 </TabsContent>
+
+                <TabsContent value="products">
+                  <div className="rounded-md border">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b bg-muted/50">
+                            <th className="px-4 py-3 text-left font-medium">ID</th>
+                            <th className="px-4 py-3 text-left font-medium">Name</th>
+                            <th className="px-4 py-3 text-left font-medium">Price</th>
+                            <th className="px-4 py-3 text-left font-medium">Category</th>
+                            <th className="px-4 py-3 text-left font-medium">Model</th>
+                            <th className="px-4 py-3 text-right font-medium">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {pendingProducts.map((product) => (
+                            <tr key={product._id} className="border-b">
+                              <td className="px-4 py-3">{product._id}</td>
+                              <td className="px-4 py-3">{product.genericName}</td>
+                              <td className="px-4 py-3">₹{product.discountPrice.toFixed(2)}</td>
+                              <td className="px-4 py-3">{product.category}</td>
+                              <td className="px-4 py-3">{product.model}</td>
+                              <td className="px-4 py-3 text-right">
+                                <div className="flex justify-end gap-2">
+                                  <Button variant="ghost" size="icon" onClick={() => viewProductDetails(product)}>
+                                    <Eye className="h-4 w-4" />
+                                    <span className="sr-only">View details</span>
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="text-green-600"
+                                    onClick={() => approveProduct(product._id)}
+                                  >
+                                    <CheckCircle className="h-4 w-4" />
+                                    <span className="sr-only">Approve</span>
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="text-red-600"
+                                    onClick={() => rejectProduct(product._id)}
+                                  >
+                                    <XCircle className="h-4 w-4" />
+                                    <span className="sr-only">Reject</span>
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </TabsContent>
               </Tabs>
             </CardContent>
           </Card>
         </main>
       </div>
 
-      {/* Student verification dialog */}
       <Dialog open={isStudentDialogOpen} onOpenChange={setIsStudentDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
@@ -557,6 +698,10 @@ export default function AdminDashboard() {
                   <div>
                     <p className="text-sm text-muted-foreground">Mobile Number</p>
                     <p className="font-medium">{selectedStudent.mobile}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Email</p>
+                    <p className="font-medium">{selectedStudent.email}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Applied On</p>
@@ -615,7 +760,6 @@ export default function AdminDashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* Vendor verification dialog */}
       <Dialog open={isVendorDialogOpen} onOpenChange={setIsVendorDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
@@ -695,6 +839,139 @@ export default function AdminDashboard() {
                   Reject
                 </Button>
                 <Button onClick={() => approveVendor(selectedVendor._id)}>Approve</Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen}>
+        <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Product Verification Details</DialogTitle>
+            <DialogDescription>Review product information and details</DialogDescription>
+          </DialogHeader>
+
+          {selectedProduct && (
+            <div className="grid md:grid-cols-3 gap-3">
+              <div>
+                <h3 className="font-semibold mb-4">Product Information</h3>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">ID</p>
+                    <p className="font-medium">{selectedProduct._id.slice(0,5)}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Name</p>
+                    <p className="font-medium">{selectedProduct.genericName}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Original Price</p>
+                      <p className="font-medium">₹{selectedProduct.originalPrice.toFixed(2)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Discount Price</p>
+                      <p className="font-medium">₹{selectedProduct.discountPrice.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Category</p>
+                    <p className="font-medium">{selectedProduct.category}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Model</p>
+                    <p className="font-medium">{selectedProduct.model}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Stock</p>
+                      <p className="font-medium">{selectedProduct.stock}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Sales</p>
+                      <p className="font-medium">{selectedProduct.sales}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Status</p>
+                    <Badge variant={selectedProduct.status === "active" ? "default" : "outline"}>
+                      {selectedProduct.status}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-4">Additional Details</h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-2">Color</p>
+                      <p className="font-medium">{selectedProduct.color}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-2">Weight</p>
+                      <p className="font-medium">{selectedProduct.weight}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">Variants</p>
+                    <ul className="list-disc pl-5">
+                      {selectedProduct.variants.map((variant, index) => (
+                        <li key={index} className="text-sm">
+                          {variant.key}: {variant.value}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">Description</p>
+                    <p className="font-medium">{selectedProduct.description}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">Reviews</p>
+                    {selectedProduct.reviews.length > 0 ? (
+                      <ul className="list-disc pl-5">
+                        {selectedProduct.reviews.map((review, index) => (
+                          <li key={index} className="text-sm">
+                            {review.user}: {review.comment} (Rating: {review.rating}/5)
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm">No reviews yet</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                    <p className="text-sm text-muted-foreground mb-2">Images</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProduct.images.map((image, index) => (
+                        <div key={index} className="border rounded-md overflow-hidden">
+                          <Image
+                            src={image || "https://placehold.co/100x200"}
+                            alt={`Product Image ${index + 1}`}
+                            width={100}
+                            height={200}
+                            style={{ width: '100px', height: '200px', objectFit: 'cover' }}
+                            loading="lazy"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+              <div className="md:col-span-2 flex justify-end gap-3 mt-4">
+                <Button variant="outline" onClick={() => setIsProductDialogOpen(false)}>
+                  Close
+                </Button>
+                <Button variant="destructive" onClick={() => rejectProduct(selectedProduct._id)}>
+                  Reject
+                </Button>
+                <Button onClick={() => approveProduct(selectedProduct._id)}>Approve</Button>
               </div>
             </div>
           )}

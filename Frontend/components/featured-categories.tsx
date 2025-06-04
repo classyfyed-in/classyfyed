@@ -4,27 +4,27 @@ import Link from "next/link"
 const categories = [
   {
     name: "Electronics",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://classyfyed.s3.us-east-1.amazonaws.com/electronics.jpg",
     href: "/collections/electronics",
   },
   {
     name: "Books & Stationery",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://classyfyed.s3.us-east-1.amazonaws.com/stationary.jpg",
     href: "/collections/books-stationery",
   },
   {
-    name: "Software",
-    image: "/placeholder.svg?height=200&width=200",
-    href: "/collections/software",
+    name: "Subscriptions",
+    image: "https://classyfyed.s3.us-east-1.amazonaws.com/subscriptions.png",
+    href: "/collections/subscriptions",
   },
   {
     name: "Fashion",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://classyfyed.s3.us-east-1.amazonaws.com/fashion.png",
     href: "/collections/fashion",
   },
   {
     name: "Lifestyle",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://classyfyed.s3.us-east-1.amazonaws.com/lifestyle.png",
     href: "/collections/lifestyle",
   },
 ]

@@ -49,12 +49,14 @@ export default function RegisterPage() {
   const [otpSent] = useState(true) // Always show OTP input
   const [otp, setOtp] = useState("")
   const [mobileError, setMobileError] = useState("")
+  const [emailError, setEmailError] = useState("")
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
   const [formData, setFormData] = useState<{
     institute: string;
     name: string;
     instituteId: string;
     mobile: string;
+    email: string;
     gender: string;
     dob: string;
     stream: string;
@@ -69,6 +71,7 @@ export default function RegisterPage() {
     name: "",
     instituteId: "",
     mobile: "",
+    email: "",
     gender: "",
     dob: "",
     stream: "",
@@ -81,8 +84,8 @@ export default function RegisterPage() {
   })
 
   useEffect(() => {
-    console.log("RegisterPage - Current state:", { step, role, otpSent, otp, mobileError, formData })
-  }, [step, role, otpSent, otp, mobileError, formData])
+    console.log("RegisterPage - Current state:", { step, role, otpSent, otp, mobileError, emailError, formData })
+  }, [step, role, otpSent, otp, mobileError, emailError, formData])
 
   const validateMobile = (mobile: string): boolean => {
     const regex = /^\d{10}$/
@@ -94,12 +97,22 @@ export default function RegisterPage() {
     return true
   }
 
+  const validateEmail = (email: string): boolean => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!regex.test(email)) {
+      setEmailError("Please enter a valid email address")
+      return false
+    }
+    setEmailError("")
+    return true
+  }
+
   const handleNextStep = () => {
     if (otp !== "1234") {
       console.log("RegisterPage - Invalid OTP:", otp)
       return
     }
-    if (!validateMobile(formData.mobile)) return
+    if (!validateMobile(formData.mobile) || !validateEmail(formData.email)) return
     console.log("RegisterPage - Moving to step", step + 1)
     setStep(step + 1)
   }
@@ -119,6 +132,9 @@ export default function RegisterPage() {
     if (id === "mobile") {
       validateMobile(value)
     }
+    if (id === "email") {
+      validateEmail(value)
+    }
   }
 
   interface HandleSelectChange {
@@ -136,11 +152,11 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
-    if (!validateMobile(formData.mobile)) {
-      console.log("RegisterPage - Invalid mobile number")
+    if (!validateMobile(formData.mobile) || !validateEmail(formData.email)) {
+      console.log("RegisterPage - Invalid mobile number or email")
       return
     }
-    if (!formData.institute || !formData.name || !formData.instituteId || !formData.idCardFront || !formData.idCardBack) {
+    if (!formData.institute || !formData.name || !formData.instituteId || !formData.email || !formData.idCardFront || !formData.idCardBack) {
       console.log("RegisterPage - Missing required fields")
       return
     }
@@ -158,7 +174,7 @@ export default function RegisterPage() {
       const data: SubmitResponse = await response.json()
       if (data.success) {
         console.log("RegisterPage - Registration successful")
-        router.push("/")
+        router.push("/auth/login")
       } else {
         console.error("RegisterPage - Registration failed:", data.message)
       }
@@ -268,6 +284,22 @@ export default function RegisterPage() {
                             />
                             {mobileError && (
                               <p className="text-red-600 text-sm mt-1">{mobileError}</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email Address</Label>
+                          <div className="flex-1">
+                            <Input
+                              id="email"
+                              placeholder="Enter your email address"
+                              className="block focus:ring-2 focus:ring-blue-500"
+                              value={formData.email}
+                              onChange={handleInputChange}
+                            />
+                            {emailError && (
+                              <p className="text-red-600 text-sm mt-1">{emailError}</p>
                             )}
                           </div>
                         </div>
@@ -418,12 +450,12 @@ export default function RegisterPage() {
                   <CardFooter className="flex justify-between mt-4">
                     {step === 1 ? (
                       <div className="flex w-full justify-between">
-                        <Button variant="outline" asChild>
+                        <Button  asChild>
                           <Link href="/auth/login">Already have an account? Sign In</Link>
                         </Button>
                         <Button
                           onClick={handleNextStep}
-                          disabled={!otpSent || otp !== "1234" || !!mobileError}
+                          disabled={!otpSent || otp !== "1234" || !!mobileError || !!emailError}
                         >
                           Next
                         </Button>
@@ -433,7 +465,7 @@ export default function RegisterPage() {
                         <Button variant="outline" onClick={handlePrevStep}>
                           Previous
                         </Button>
-                        <Button type="submit" disabled={!formData.institute || !formData.idCardFront || !formData.idCardBack || !!mobileError}>
+                        <Button type="submit" disabled={!formData.institute || !formData.email || !formData.idCardFront || !formData.idCardBack || !!mobileError || !!emailError}>
                           Register
                         </Button>
                       </div>
@@ -453,7 +485,7 @@ export default function RegisterPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="space-y-2">
+                    <div className="space-y-2 bilim">
                       <Label htmlFor="admin-userid">User ID</Label>
                       <Input id="admin-userid" placeholder="Enter admin user ID" className="block focus:ring-2 focus:ring-blue-500" />
                     </div>

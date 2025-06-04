@@ -48,7 +48,7 @@ export default function VendorLoginPage() {
             <Button className="w-full">Sign In</Button>
             <div className="text-center text-sm">
               Don&apos;t have a vendor account?{" "}
-              <Link href="/vendor/register" className="text-primary hover:underline">
+              <Link href="/vendor/register" className="text-blue-600 hover:underline">
                 Register now
               </Link>
             </div>

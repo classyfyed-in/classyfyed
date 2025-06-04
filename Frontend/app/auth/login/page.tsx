@@ -80,7 +80,7 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token)
       console.log("LoginPage - Login successful for mobile:", mobile)
       setError("")
-      router.push("/user/dashboard") // Redirect to dashboard
+      router.push("/user/dashboard")
     } catch (err) {
       console.error("LoginPage - Error signing in:", err)
       setError("Error signing in")
@@ -196,7 +196,7 @@ export default function LoginPage() {
                 </Button>
                 <div className="text-center text-sm">
                   Don&apos;t have an account?{" "}
-                  <Link href="/auth/register" className="text-primary hover:underline">
+                  <Link href="/auth/register" className="text-blue-600 hover:underline">
                     Register now
                   </Link>
                 </div>

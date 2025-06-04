@@ -1,8 +1,7 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
-    domains: ['placehold.co'],
+    domains: ['classyfyed.s3.us-east-1.amazonaws.com', 'placehold.co'],
   },
 };
 

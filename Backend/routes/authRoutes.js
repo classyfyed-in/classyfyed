@@ -14,6 +14,7 @@ router.post("/register", async (req, res) => {
       name,
       instituteId,
       mobile,
+      email,
       gender,
       dob,
       stream,
@@ -26,11 +27,14 @@ router.post("/register", async (req, res) => {
     } = req.body;
 
     // Enhanced validation
-    if (!institute || !role || !name || !instituteId || !mobile || !gender || !dob) {
+    if (!institute || !role || !name || !instituteId || !mobile || !email || !gender || !dob) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }
     if (!/^\d{10}$/.test(mobile)) {
       return res.status(400).json({ success: false, message: "Please provide a valid 10-digit mobile number" });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ success: false, message: "Please provide a valid email address" });
     }
     if (role === "STUDENT" && (!stream || !branch || !currentYear || !passoutYear)) {
       return res.status(400).json({ success: false, message: "Missing student-specific fields" });
@@ -40,9 +44,9 @@ router.post("/register", async (req, res) => {
     }
 
     // Check if user exists
-    const existingUser = await User.findOne({ mobile });
+    const existingUser = await User.findOne({ $or: [{ mobile }, { email }] });
     if (existingUser) {
-      return res.status(400).json({ success: false, message: "User already exists with this mobile number" });
+      return res.status(400).json({ success: false, message: "User already exists with this mobile number or email" });
     }
 
     // Create user
@@ -52,6 +56,7 @@ router.post("/register", async (req, res) => {
       name,
       instituteId,
       mobile,
+      email,
       gender,
       dob: new Date(dob),
       stream,
@@ -77,7 +82,7 @@ router.post("/register", async (req, res) => {
 router.get("/users", async (req, res) => {
   try {
     const users = await User.find({ isVerified: false }).select(
-      "_id name institute role instituteId mobile createdAt idCardFront idCardBack"
+      "_id name institute role instituteId mobile email createdAt idCardFront idCardBack"
     );
     res.status(200).json({ success: true, users });
   } catch (error) {

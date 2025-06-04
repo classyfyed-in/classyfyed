@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js"
 import vendorRoutes from "./routes/vendorRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
+import productRoutes from "./routes/productRoutes.js"
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,7 @@ connectDB();
 app.use("/api/auth", authRoutes);
 app.use("/api/vendor", vendorRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/product", productRoutes);
 
 app.listen(PORT, () => {
     console.log("Classyfyed backend running on port", PORT);

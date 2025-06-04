@@ -563,7 +563,7 @@ export default function VendorRegisterPage() {
           <CardFooter className="flex justify-between">
             {step === 1 ? (
               <div className="flex w-full justify-between">
-                <Button variant="outline" asChild>
+                <Button asChild>
                   <Link href="/vendor/login">Already a vendor? Sign In</Link>
                 </Button>
                 <Button onClick={handleNextStep} disabled={!otpSent}>
