@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 
 export default function LoginPage() {
   const [otpSent, setOtpSent] = useState(false)
-  const [mobile, setMobile] = useState("")
+  const [email, setEmail] = useState("")
   const [otp, setOtp] = useState("")
   const [adminUserId, setAdminUserId] = useState("")
   const [adminPassword, setAdminPassword] = useState("")
@@ -22,22 +22,22 @@ export default function LoginPage() {
   const [dialogMessage, setDialogMessage] = useState("")
   const [error, setError] = useState("")
   const router = useRouter()
-  const BASE_URL=process.env.NEXT_PUBLIC_BASE_URL
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
   const handleSendOtp = async () => {
-    // Validate mobile number
-    if (!/^\d{10}$/.test(mobile)) {
-      setError("Please enter a valid 10-digit mobile number")
+    // Validate email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address")
       return
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/api/auth/users/mobile/${mobile}`, {
+      const response = await fetch(`${BASE_URL}/api/auth/users/email/${encodeURIComponent(email)}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       })
       const data = await response.json()
-      console.log("LoginPage - Fetched user by mobile:", data)
+      console.log("LoginPage - Fetched user by email:", data)
 
       if (!data.success) {
         setDialogMessage("User not registered or rejected")
@@ -67,7 +67,7 @@ export default function LoginPage() {
       const response = await fetch(`${BASE_URL}/api/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mobile, otp }),
+        body: JSON.stringify({ email, otp }),
       })
       const data = await response.json()
       console.log("LoginPage - Sign-in response:", data)
@@ -78,7 +78,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("token", data.token)
-      console.log("LoginPage - Login successful for mobile:", mobile)
+      console.log("LoginPage - Login successful for email:", email)
       setError("")
       router.push("/user/dashboard")
     } catch (err) {
@@ -105,31 +105,31 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token)
       console.log("LoginPage - Admin login successful for userId:", adminUserId)
       setError("")
-      router.push("/admin/dashboard") // Redirect to admin dashboard
+      router.push("/admin/dashboard")
     } catch (err) {
       console.error("LoginPage - Error admin login:", err)
       setError("Error signing in as admin")
     }
   }
 
-  const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setMobile(e.target.value)
-    setError("") // Clear error on input change
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setEmail(e.target.value)
+    setError("")
   }
 
   const handleAdminUserIdChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setAdminUserId(e.target.value)
-    setError("") // Clear error on input change
+    setError("")
   }
 
   const handleAdminPasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setAdminPassword(e.target.value)
-    setError("") // Clear error on input change
+    setError("")
   }
 
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setOtp(e.target.value)
-    setError("") // Clear error on input change
+    setError("")
   }
 
   return (
@@ -155,22 +155,22 @@ export default function LoginPage() {
             <Card className="mx-auto max-w-md">
               <CardHeader>
                 <CardTitle>Student / Faculty Login</CardTitle>
-                <CardDescription>Sign in with your mobile number</CardDescription>
+                <CardDescription>Sign in with your Email</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="mobile">Mobile Number</Label>
+                    <Label htmlFor="email">Email</Label>
                     <div className="flex space-x-2">
                       <Input
-                        id="mobile"
-                        placeholder="Enter your registered mobile number"
-                        value={mobile}
-                        onChange={handleMobileChange}
-                        pattern="\d{10}"
-                        title="Please enter a valid 10-digit mobile number"
+                        id="email"
+                        type="email"
+                        placeholder="Enter your registered email"
+                        value={email}
+                        onChange={handleEmailChange}
+                        title="Please enter a valid email address"
                       />
-                      <Button onClick={handleSendOtp} disabled={otpSent && mobile.length !== 10}>
+                      <Button onClick={handleSendOtp} disabled={otpSent}>
                         {otpSent ? "Resend" : "Send OTP"}
                       </Button>
                     </div>
@@ -182,7 +182,7 @@ export default function LoginPage() {
                       <Label htmlFor="otp">OTP Verification</Label>
                       <Input
                         id="otp"
-                        placeholder="Enter OTP sent to your mobile"
+                        placeholder="Enter OTP sent to your email"
                         value={otp}
                         onChange={handleOtpChange}
                       />
@@ -248,7 +248,6 @@ export default function LoginPage() {
         </Tabs>
       </div>
 
-      {/* Status Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>

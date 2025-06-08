@@ -92,19 +92,19 @@ router.get("/users", async (req, res) => {
 });
 
 // Get user by mobile number
-router.get("/users/mobile/:mobile", async (req, res) => {
+router.get("/users/email/:email", async (req, res) => {
   try {
-    const { mobile } = req.params;
-    if (!/^\d{10}$/.test(mobile)) {
-      return res.status(400).json({ success: false, message: "Invalid mobile number" });
+    const { email } = req.params;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ success: false, message: "Invalid email address" });
     }
-    const user = await User.findOne({ mobile }).select("_id isVerified");
+    const user = await User.findOne({ email }).select("_id isVerified");
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
     res.status(200).json({ success: true, user });
   } catch (error) {
-    console.error("Error fetching user by mobile:", error);
+    console.error("Error fetching user by email:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
@@ -153,21 +153,21 @@ router.delete("/users/:id", async (req, res) => {
 // Sign in user
 router.post("/signin", async (req, res) => {
   try {
-    const { mobile, otp } = req.body;
+    const { email, otp } = req.body;
 
     // Validate input
-    if (!mobile || !otp) {
-      return res.status(400).json({ success: false, message: "Mobile number and OTP are required" });
+    if (!email || !otp) {
+      return res.status(400).json({ success: false, message: "Email and OTP are required" });
     }
-    if (!/^\d{10}$/.test(mobile)) {
-      return res.status(400).json({ success: false, message: "Invalid mobile number" });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ success: false, message: "Invalid email address" });
     }
     if (otp !== "1234") {
       return res.status(401).json({ success: false, message: "Invalid OTP" });
     }
 
     // Check if user exists and is verified
-    const user = await User.findOne({ mobile }).select("_id role isVerified");
+    const user = await User.findOne({ email }).select("_id role isVerified");
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }

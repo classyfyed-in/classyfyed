@@ -526,7 +526,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2
 ;
 function LoginPage() {
     const [otpSent, setOtpSent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [mobile, setMobile] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [email, setEmail] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [otp, setOtp] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [adminUserId, setAdminUserId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [adminPassword, setAdminPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
@@ -536,20 +536,20 @@ function LoginPage() {
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
     const BASE_URL = ("TURBOPACK compile-time value", "http://localhost:5001");
     const handleSendOtp = async ()=>{
-        // Validate mobile number
-        if (!/^\d{10}$/.test(mobile)) {
-            setError("Please enter a valid 10-digit mobile number");
+        // Validate email
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setError("Please enter a valid email address");
             return;
         }
         try {
-            const response = await fetch(`${BASE_URL}/api/auth/users/mobile/${mobile}`, {
+            const response = await fetch(`${BASE_URL}/api/auth/users/email/${encodeURIComponent(email)}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
             const data = await response.json();
-            console.log("LoginPage - Fetched user by mobile:", data);
+            console.log("LoginPage - Fetched user by email:", data);
             if (!data.success) {
                 setDialogMessage("User not registered or rejected");
                 setDialogOpen(true);
@@ -578,7 +578,7 @@ function LoginPage() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    mobile,
+                    email,
                     otp
                 })
             });
@@ -589,7 +589,7 @@ function LoginPage() {
                 return;
             }
             localStorage.setItem("token", data.token);
-            console.log("LoginPage - Login successful for mobile:", mobile);
+            console.log("LoginPage - Login successful for email:", email);
             setError("");
             router.push("/user/dashboard");
         } catch (err) {
@@ -618,32 +618,27 @@ function LoginPage() {
             localStorage.setItem("token", data.token);
             console.log("LoginPage - Admin login successful for userId:", adminUserId);
             setError("");
-            router.push("/admin/dashboard") // Redirect to admin dashboard
-            ;
+            router.push("/admin/dashboard");
         } catch (err) {
             console.error("LoginPage - Error admin login:", err);
             setError("Error signing in as admin");
         }
     };
-    const handleMobileChange = (e)=>{
-        setMobile(e.target.value);
-        setError("") // Clear error on input change
-        ;
+    const handleEmailChange = (e)=>{
+        setEmail(e.target.value);
+        setError("");
     };
     const handleAdminUserIdChange = (e)=>{
         setAdminUserId(e.target.value);
-        setError("") // Clear error on input change
-        ;
+        setError("");
     };
     const handleAdminPasswordChange = (e)=>{
         setAdminPassword(e.target.value);
-        setError("") // Clear error on input change
-        ;
+        setError("");
     };
     const handleOtpChange = (e)=>{
         setOtp(e.target.value);
-        setError("") // Clear error on input change
-        ;
+        setError("");
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "container mx-auto py-10 px-4",
@@ -737,7 +732,7 @@ function LoginPage() {
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
-                                                children: "Sign in with your mobile number"
+                                                children: "Sign in with your Email"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/auth/login/page.tsx",
                                                 lineNumber: 158,
@@ -757,8 +752,8 @@ function LoginPage() {
                                                     className: "space-y-2",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                            htmlFor: "mobile",
-                                                            children: "Mobile Number"
+                                                            htmlFor: "email",
+                                                            children: "Email"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/auth/login/page.tsx",
                                                             lineNumber: 163,
@@ -768,12 +763,12 @@ function LoginPage() {
                                                             className: "flex space-x-2",
                                                             children: [
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                                                    id: "mobile",
-                                                                    placeholder: "Enter your registered mobile number",
-                                                                    value: mobile,
-                                                                    onChange: handleMobileChange,
-                                                                    pattern: "\\d{10}",
-                                                                    title: "Please enter a valid 10-digit mobile number"
+                                                                    id: "email",
+                                                                    type: "email",
+                                                                    placeholder: "Enter your registered email",
+                                                                    value: email,
+                                                                    onChange: handleEmailChange,
+                                                                    title: "Please enter a valid email address"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/auth/login/page.tsx",
                                                                     lineNumber: 165,
@@ -781,7 +776,7 @@ function LoginPage() {
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                                                     onClick: handleSendOtp,
-                                                                    disabled: otpSent && mobile.length !== 10,
+                                                                    disabled: otpSent,
                                                                     children: otpSent ? "Resend" : "Send OTP"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/auth/login/page.tsx",
@@ -821,7 +816,7 @@ function LoginPage() {
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                             id: "otp",
-                                                            placeholder: "Enter OTP sent to your mobile",
+                                                            placeholder: "Enter OTP sent to your email",
                                                             value: otp,
                                                             onChange: handleOtpChange
                                                         }, void 0, false, {
@@ -1050,20 +1045,20 @@ function LoginPage() {
                                     children: "Verification Status"
                                 }, void 0, false, {
                                     fileName: "[project]/app/auth/login/page.tsx",
-                                    lineNumber: 255,
+                                    lineNumber: 254,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                     children: dialogMessage
                                 }, void 0, false, {
                                     fileName: "[project]/app/auth/login/page.tsx",
-                                    lineNumber: 256,
+                                    lineNumber: 255,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/auth/login/page.tsx",
-                            lineNumber: 254,
+                            lineNumber: 253,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -1072,23 +1067,23 @@ function LoginPage() {
                                 children: "Close"
                             }, void 0, false, {
                                 fileName: "[project]/app/auth/login/page.tsx",
-                                lineNumber: 259,
+                                lineNumber: 258,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/auth/login/page.tsx",
-                            lineNumber: 258,
+                            lineNumber: 257,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/auth/login/page.tsx",
-                    lineNumber: 253,
+                    lineNumber: 252,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/auth/login/page.tsx",
-                lineNumber: 252,
+                lineNumber: 251,
                 columnNumber: 7
             }, this)
         ]
