@@ -80,8 +80,13 @@ export default function Navbar() {
           </Sheet>
 
           <Link href="/" className="flex items-center gap-2 mr-6">
-            <span className="font-bold text-xl">Classyfyed</span>
+          <span
+            className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-[#194EB4] to-[#AC67DE]"
+          >
+            Classyfyed
+          </span>
           </Link>
+
 
           <div className="hidden md:flex items-center gap-6 mx-6">
             <Link href="/user/dashboard" className="text-sm font-medium transition-colors hover:text-primary">

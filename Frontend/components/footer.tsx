@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Facebook, Instagram, Twitter } from "lucide-react"
+import { SocialIcon } from 'react-social-icons'
 
 export default function Footer() {
   return (
@@ -11,20 +11,71 @@ export default function Footer() {
             <p className="text-muted-foreground mb-4">
               The premier platform for verified students to access exclusive discounts on products and subscriptions.
             </p>
-            <div className="flex space-x-4">
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Facebook className="h-5 w-5" />
-                <span className="sr-only">Facebook</span>
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Instagram className="h-5 w-5" />
-                <span className="sr-only">Instagram</span>
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </Link>
-            </div>
+            <div className="flex space-x-2 sm:space-x-4">
+            <SocialIcon
+              bgColor="transparent"
+              fgColor="blue"
+              url="https://t.me/classyfyed"
+              style={{ width: '2rem', height: '2rem' }}
+              className="w-6 h-6 sm:w-8 sm:h-8"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <SocialIcon
+              bgColor="transparent"
+              fgColor="blue"
+              url="https://www.instagram.com/classyfyed.in/"
+              style={{ width: '2rem', height: '2rem' }}
+              className="w-6 h-6 sm:w-8 sm:h-8"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <SocialIcon
+              bgColor="transparent"
+              fgColor="blue"
+              url="https://www.facebook.com/classyfyed.in/"
+              style={{ width: '2rem', height: '2rem' }}
+              className="w-6 h-6 sm:w-8 sm:h-8"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <SocialIcon
+              bgColor="transparent"
+              fgColor="blue"
+              url="https://whatsapp.com/channel/0029Vb7xJATJpe8jQSk5dQ1f"
+              style={{ width: '2rem', height: '2rem' }}
+              className="w-6 h-6 sm:w-8 sm:h-8"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <SocialIcon
+              bgColor="transparent"
+              fgColor="blue"
+              url="https://x.com/_Classyfyed"
+              style={{ width: '2rem', height: '2rem' }}
+              className="w-6 h-6 sm:w-8 sm:h-8"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <SocialIcon
+              bgColor="transparent"
+              fgColor="blue"
+              url="https://www.youtube.com/channel/UC5X542lwTzQPN1qMbcdnXMg"
+              style={{ width: '2rem', height: '2rem' }}
+              className="w-6 h-6 sm:w-8 sm:h-8"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <SocialIcon
+              bgColor="transparent"
+              fgColor="blue"
+              url="https://www.reddit.com/user/classyfyed/"
+              style={{ width: '2rem', height: '2rem' }}
+              className="w-6 h-6 sm:w-8 sm:h-8"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+          </div>
           </div>
 
           <div>

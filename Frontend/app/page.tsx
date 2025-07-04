@@ -75,11 +75,16 @@ export default function Home() {
               Join thousands of students saving on products and subscriptions
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mt-6">
-              <Button size="lg" asChild className="bg-primary hover:bg-primary/90">
-                <Link href="/auth/register" onClick={(e) => handleProtectedLink(e, "/auth/register")}>
-                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+            <Button
+              size="lg"
+              asChild
+              className="bg-gradient-to-r from-[#194EB4] to-[#AC67DE] hover:opacity-90"
+            >
+              <Link href="/auth/register" onClick={(e) => handleProtectedLink(e, "/auth/register")}>
+                Get Started
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
               <Button
                 size="lg"
                 variant="outline"
