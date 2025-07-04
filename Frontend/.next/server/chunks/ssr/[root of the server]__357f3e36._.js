@@ -236,14 +236,14 @@ function ThankYouPage() {
                         className: "mr-2 h-4 w-4"
                     }, void 0, false, {
                         fileName: "[project]/app/thank-you/page.tsx",
-                        lineNumber: 13,
+                        lineNumber: 14,
                         columnNumber: 9
                     }, this),
                     "Back to Home"
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/thank-you/page.tsx",
-                lineNumber: 12,
+                lineNumber: 13,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -255,12 +255,12 @@ function ThankYouPage() {
                             children: "Thank You for Visiting Classyfyed!"
                         }, void 0, false, {
                             fileName: "[project]/app/thank-you/page.tsx",
-                            lineNumber: 19,
+                            lineNumber: 20,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/thank-you/page.tsx",
-                        lineNumber: 18,
+                        lineNumber: 19,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -271,7 +271,7 @@ function ThankYouPage() {
                                 children: "We appreciate your interest in Classyfyed. Connect with us on social media to stay updated!"
                             }, void 0, false, {
                                 fileName: "[project]/app/thank-you/page.tsx",
-                                lineNumber: 24,
+                                lineNumber: 25,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -289,7 +289,7 @@ function ThankYouPage() {
                                         onClick: ()=>window.open("https://t.me/classyfyed", "_blank", "noopener,noreferrer")
                                     }, void 0, false, {
                                         fileName: "[project]/app/thank-you/page.tsx",
-                                        lineNumber: 28,
+                                        lineNumber: 29,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$social$2d$icons$2f$dist$2f$component$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SocialIcon"], {
@@ -304,7 +304,7 @@ function ThankYouPage() {
                                         onClick: ()=>window.open("https://www.instagram.com/classyfyed.in/", "_blank", "noopener,noreferrer")
                                     }, void 0, false, {
                                         fileName: "[project]/app/thank-you/page.tsx",
-                                        lineNumber: 36,
+                                        lineNumber: 37,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$social$2d$icons$2f$dist$2f$component$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SocialIcon"], {
@@ -319,7 +319,7 @@ function ThankYouPage() {
                                         onClick: ()=>window.open("https://www.facebook.com/classyfyed.in/", "_blank", "noopener,noreferrer")
                                     }, void 0, false, {
                                         fileName: "[project]/app/thank-you/page.tsx",
-                                        lineNumber: 44,
+                                        lineNumber: 45,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$social$2d$icons$2f$dist$2f$component$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SocialIcon"], {
@@ -334,7 +334,7 @@ function ThankYouPage() {
                                         onClick: ()=>window.open("https://whatsapp.com/channel/0029Vb7xJATJpe8jQSk5dQ1f", "_blank", "noopener,noreferrer")
                                     }, void 0, false, {
                                         fileName: "[project]/app/thank-you/page.tsx",
-                                        lineNumber: 52,
+                                        lineNumber: 53,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$social$2d$icons$2f$dist$2f$component$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SocialIcon"], {
@@ -349,7 +349,7 @@ function ThankYouPage() {
                                         onClick: ()=>window.open("https://x.com/_Classyfyed", "_blank", "noopener,noreferrer")
                                     }, void 0, false, {
                                         fileName: "[project]/app/thank-you/page.tsx",
-                                        lineNumber: 60,
+                                        lineNumber: 61,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$social$2d$icons$2f$dist$2f$component$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SocialIcon"], {
@@ -364,7 +364,7 @@ function ThankYouPage() {
                                         onClick: ()=>window.open("https://www.youtube.com/channel/UC5X542lwTzQPN1qMbcdnXMg", "_blank", "noopener,noreferrer")
                                     }, void 0, false, {
                                         fileName: "[project]/app/thank-you/page.tsx",
-                                        lineNumber: 68,
+                                        lineNumber: 69,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$social$2d$icons$2f$dist$2f$component$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SocialIcon"], {
@@ -379,13 +379,13 @@ function ThankYouPage() {
                                         onClick: ()=>window.open("https://www.reddit.com/user/classyfyed/", "_blank", "noopener,noreferrer")
                                     }, void 0, false, {
                                         fileName: "[project]/app/thank-you/page.tsx",
-                                        lineNumber: 76,
+                                        lineNumber: 77,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/thank-you/page.tsx",
-                                lineNumber: 27,
+                                lineNumber: 28,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -394,19 +394,19 @@ function ThankYouPage() {
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-sm text-muted-foreground",
                                         children: [
-                                            "If you’ve registered, please return to the registration form and click the ",
+                                            "Your email has been verified. Please return to the registration form and click the ",
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                                 children: "“Refresh”"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/thank-you/page.tsx",
-                                                lineNumber: 87,
-                                                columnNumber: 90
+                                                lineNumber: 88,
+                                                columnNumber: 98
                                             }, this),
                                             " button to check your email verification status."
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/thank-you/page.tsx",
-                                        lineNumber: 86,
+                                        lineNumber: 87,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -416,36 +416,36 @@ function ThankYouPage() {
                                             children: "Back to Registration"
                                         }, void 0, false, {
                                             fileName: "[project]/app/thank-you/page.tsx",
-                                            lineNumber: 90,
+                                            lineNumber: 91,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/thank-you/page.tsx",
-                                        lineNumber: 89,
+                                        lineNumber: 90,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/thank-you/page.tsx",
-                                lineNumber: 85,
+                                lineNumber: 86,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/thank-you/page.tsx",
-                        lineNumber: 23,
+                        lineNumber: 24,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/thank-you/page.tsx",
-                lineNumber: 17,
+                lineNumber: 18,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/thank-you/page.tsx",
-        lineNumber: 11,
+        lineNumber: 12,
         columnNumber: 5
     }, this);
 }

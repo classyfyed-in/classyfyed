@@ -6,6 +6,7 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
 export default function ThankYouPage() {
+
   return (
     <div className="container mx-auto py-10 px-4 max-w-[1200px]">
       <Link href="/" className="inline-flex items-center mb-8 text-sm font-medium">
@@ -83,7 +84,7 @@ export default function ThankYouPage() {
           </div>
           <div className="text-center space-y-4">
             <p className="text-sm text-muted-foreground">
-              If you’ve registered, please return to the registration form and click the <strong>“Refresh”</strong> button to check your email verification status.
+              Your email has been verified. Please return to the registration form and click the <strong>“Refresh”</strong> button to check your email verification status.
             </p>
           </div>
         </CardContent>
