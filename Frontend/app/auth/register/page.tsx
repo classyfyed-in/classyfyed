@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, X, CheckCircle } from "lucide-react"
+import { ArrowLeft, CheckCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { SocialIcon } from "react-social-icons"
 import { useToast } from "@/hooks/use-toast"
