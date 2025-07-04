@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, CheckCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { SocialIcon } from "react-social-icons"
-
+import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -25,9 +25,6 @@ const institutes = [
 
 function ErrorBoundary({ children }: { children: React.ReactNode }) {
   const [hasError, setHasError] = useState(false)
-  useEffect(() => {
-    setHasError(false)
-  }, [children])
   if (hasError) {
     return <div className="text-red-600 text-center">Error rendering form. Check console for details.</div>
   }
@@ -41,17 +38,18 @@ function ErrorBoundary({ children }: { children: React.ReactNode }) {
 }
 
 export default function RegisterPage() {
+  const { toast } = useToast()
   const router = useRouter()
   const [role, setRole] = useState("STUDENT")
   const [step, setStep] = useState(1)
-  const [otpSent] = useState(true) // Always show OTP input
-  const [otp, setOtp] = useState("")
   const [mobileError, setMobileError] = useState("")
   const [emailError, setEmailError] = useState("")
   const [adminUserId, setAdminUserId] = useState("")
   const [adminPassword, setAdminPassword] = useState("")
   const [adminError, setAdminError] = useState("")
   const [isTncDialogOpen, setIsTncDialogOpen] = useState(true)
+  const [verificationStatus, setVerificationStatus] = useState("idle") // idle, sent, verified, error
+  const [isVerificationDialogOpen, setIsVerificationDialogOpen] = useState(false)
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
   const [formData, setFormData] = useState({
     institute: "",
@@ -70,24 +68,15 @@ export default function RegisterPage() {
     driveLink: "",
   })
 
-  useEffect(() => {
-    console.log("RegisterPage - Current state:", { step, role, otpSent, otp, mobileError, emailError, adminError, isTncDialogOpen, formData })
-  }, [step, role, otpSent, otp, mobileError, emailError, adminError, isTncDialogOpen, formData])
-
-  interface ValidateMobileResult {
-    isValid: boolean;
-    errorMessage: string;
-  }
-
-  const validateMobile = (mobile: string): ValidateMobileResult => {
-    const regex = /^\d{10}$/;
+  const validateMobile = (mobile: string) => {
+    const regex = /^\d{10}$/
     if (!regex.test(mobile)) {
-      setMobileError("Please enter a valid 10-digit mobile number");
-      return { isValid: false, errorMessage: "Invalid mobile number" };
+      setMobileError("Please enter a valid 10-digit mobile number")
+      return false
     }
-    setMobileError("");
-    return { isValid: true, errorMessage: "" };
-  };
+    setMobileError("")
+    return true
+  }
 
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -99,12 +88,130 @@ export default function RegisterPage() {
     return true
   }
 
-  const handleNextStep = () => {
-    if (otp !== "1234") {
-      console.log("RegisterPage - Invalid OTP:", otp)
+  const handleSendVerificationLink = async () => {
+    if (!validateEmail(formData.email)) {
+      console.error("RegisterPage - Invalid email for verification")
+      toast({
+        variant: "destructive",
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+      })
       return
     }
-    if (!validateMobile(formData.mobile) || !validateEmail(formData.email)) return
+    try {
+      const response = await fetch(`/api/send-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, name: formData.name }),
+      })
+      const data = await response.json()
+      if (response.ok || data.success) {
+        setVerificationStatus("sent")
+        toast({
+          title: "Sent!",
+          description: "Verification Email Sent.",
+        })
+      } else {
+        setVerificationStatus("error")
+        toast({
+          variant: "destructive",
+          title: "Failed!",
+          description: data.message || "Failed to send verification link",
+        })
+        console.error("RegisterPage - Verification error:", data.message || "Failed to send verification link")
+      }
+    } catch (error) {
+      console.error("RegisterPage - Error sending verification link:", error)
+      setVerificationStatus("error")
+      toast({
+        variant: "destructive",
+        title: "Failed!",
+        description: "Error sending verification link",
+      })
+    }
+  }
+
+  const handleCheckVerification = async () => {
+    try {
+      const response = await fetch(`/api/check`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email }),
+      })
+      const data = await response.json()
+      if (data.success) {
+        setIsVerificationDialogOpen(true)
+        toast({
+          title: "Verified!",
+          description: "You're verified now.",
+        })
+      } else {
+        setVerificationStatus("error")
+        toast({
+          variant: "destructive",
+          title: "Not Verified",
+          description: data.message || "Email not verified yet",
+        })
+        console.error("RegisterPage - Verification error:", data.message || "Email not verified yet")
+      }
+    } catch (error) {
+      console.error("RegisterPage - Error checking verification:", error)
+      setVerificationStatus("error")
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Error checking verification",
+      })
+    }
+  }
+
+  const handleVerificationDialogClose = async() => {
+    setVerificationStatus("verified")
+    setIsVerificationDialogOpen(false)
+    
+    try {
+      const response = await fetch('/api/delete', {
+        method: "DELETE",
+        headers: { "content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email })
+      })
+
+      const data = await response.json()
+
+      if(!data.success) {
+        console.error("Error deleting verification record");
+      }
+    } catch (error) {
+      console.error("RegisterPage - Error checking verification:", error)
+      setVerificationStatus("error")
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Error checking verification",
+      })
+    }
+
+  }
+
+  const handleNextStep = () => {
+    if (verificationStatus !== "verified") {
+      console.error("RegisterPage - Email not verified")
+      toast({
+        variant: "destructive",
+        title: "Email Not Verified",
+        description: "Please verify your email before proceeding.",
+      })
+      return
+    }
+    if (!validateMobile(formData.mobile) || !validateEmail(formData.email)) {
+      console.error("RegisterPage - Invalid mobile or email")
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please enter a valid mobile number and email address.",
+      })
+      return
+    }
     console.log("RegisterPage - Moving to step", step + 1)
     setStep(step + 1)
   }
@@ -126,9 +233,10 @@ export default function RegisterPage() {
     }
     if (id === "email") {
       validateEmail(value)
+      setVerificationStatus("idle")
+      console.log("RegisterPage - Email changed, reset verificationStatus to 'idle'")
     }
   }
-
 
   interface HandleSelectChange {
     (key: keyof typeof formData): (value: string) => void;
@@ -138,12 +246,12 @@ export default function RegisterPage() {
     setFormData((prev) => ({ ...prev, [key]: value }))
   }
 
-  const handleAdminUserIdChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleAdminUserIdChange = (e: InputChangeEvent) => {
     setAdminUserId(e.target.value)
     setAdminError("")
   }
 
-  const handleAdminPasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleAdminPasswordChange = (e: InputChangeEvent) => {
     setAdminPassword(e.target.value)
     setAdminError("")
   }
@@ -156,35 +264,56 @@ export default function RegisterPage() {
         body: JSON.stringify({ userId: adminUserId, password: adminPassword }),
       })
       const data = await response.json()
-      console.log("RegisterPage - Admin login response:", data)
-
       if (!data.success) {
         setAdminError(data.message || "Admin login failed")
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: data.message || "Admin login failed",
+        })
         return
       }
-
       localStorage.setItem("token", data.token)
-      console.log("RegisterPage - Admin login successful for userId:", adminUserId)
       setAdminError("")
       router.push("/admin/dashboard")
     } catch (err) {
       console.error("RegisterPage - Error admin login:", err)
       setAdminError("Error signing in as admin")
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Error signing in as admin",
+      })
     }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!validateMobile(formData.mobile) || !validateEmail(formData.email)) {
-      console.log("RegisterPage - Invalid mobile number or email")
+      console.error("RegisterPage - Invalid mobile number or email")
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please enter a valid mobile number and email address.",
+      })
       return
     }
     if (!formData.institute || !formData.name || !formData.instituteId || !formData.email || !formData.idCardFront || !formData.idCardBack) {
-      console.log("RegisterPage - Missing required fields")
+      console.error("RegisterPage - Missing required fields")
+      toast({
+        variant: "destructive",
+        title: "Missing Fields",
+        description: "Please fill in all required fields.",
+      })
       return
     }
     if (role === "STUDENT" && (!formData.stream || !formData.branch || !formData.currentYear || !formData.passoutYear)) {
-      console.log("RegisterPage - Missing student-specific fields")
+      console.error("RegisterPage - Missing student-specific fields")
+      toast({
+        variant: "destructive",
+        title: "Missing Fields",
+        description: "Please fill in all student-specific fields.",
+      })
       return
     }
     console.log("RegisterPage - Submitting form:", JSON.stringify({ ...formData, role }, null, 2))
@@ -197,12 +326,26 @@ export default function RegisterPage() {
       const data = await response.json()
       if (data.success) {
         console.log("RegisterPage - Registration successful")
+        toast({
+          title: "Success!",
+          description: "Registration successful. Redirecting to login.",
+        })
         router.push("/auth/login")
       } else {
         console.error("RegisterPage - Registration failed:", data.message)
+        toast({
+          variant: "destructive",
+          title: "Registration Failed",
+          description: data.message || "Failed to register.",
+        })
       }
     } catch (error) {
       console.error("RegisterPage - Error submitting form:", error)
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Error submitting form.",
+      })
     }
   }
 
@@ -327,18 +470,37 @@ export default function RegisterPage() {
                           </div>
                         </div>
 
-                        {otpSent && (
-                          <div className="space-y-2">
-                            <Label htmlFor="otp">OTP Verification</Label>
-                            <Input
-                              id="otp"
-                              placeholder="Enter OTP (use 1234)"
-                              className="block focus:ring-2 focus:ring-blue-500"
-                              value={otp}
-                              onChange={(e) => setOtp(e.target.value)}
-                            />
-                          </div>
-                        )}
+                        <div className="space-y-2" data-verification-status={verificationStatus}>
+                          <Label>Email Verification</Label>
+                          {verificationStatus === "idle" && (
+                            <Button
+                              onClick={handleSendVerificationLink}
+                              disabled={!formData.email || !!emailError}
+                            >
+                              Send Verification Link
+                            </Button>
+                          )}
+                          {verificationStatus === "sent" && (
+                            <Button
+                              onClick={handleCheckVerification}
+                            >
+                              Refresh
+                            </Button>
+                          )}
+                          {verificationStatus === "verified" && (
+                            <div className="flex">
+                              <CheckCircle className="w-5 h-5 mr-1 text-green-600" />
+                              <p className="text-green-600 text-sm">Verified Successfully</p>
+                            </div>
+                          )}
+                          {verificationStatus === "error" && (
+                            <Button
+                            onClick={handleCheckVerification}
+                          >
+                            Refresh
+                          </Button>
+                          )}
+                        </div>
                       </div>
                     )}
 
@@ -478,7 +640,7 @@ export default function RegisterPage() {
                         </Button>
                         <Button
                           onClick={handleNextStep}
-                          disabled={!otpSent || otp !== "1234" || !!mobileError || !!emailError}
+                          disabled={verificationStatus !== "verified" || !formData.institute || !formData.email || !!mobileError || !!emailError}
                         >
                           Next
                         </Button>
@@ -626,6 +788,20 @@ export default function RegisterPage() {
                 onClick={() => window.open('https://www.reddit.com/user/classyfyed/', '_blank', 'noopener,noreferrer')}
               />
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isVerificationDialogOpen} onOpenChange={setIsVerificationDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg">Email Verified</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm">Your email has been successfully verified.</p>
+            <Button onClick={handleVerificationDialogClose} className="w-full">
+              OK
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
