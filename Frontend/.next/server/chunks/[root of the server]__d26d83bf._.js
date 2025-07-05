@@ -279,7 +279,7 @@ async function POST(req) {
               Use the One-Time Password (OTP) below to complete your login. This OTP is valid for 5 minutes.
             </p>
             <div style="text-align: center; margin: 30px 0;">
-              <div style="display: inline-block; text: linear-gradient(to right, #194EB4, #AC67DE); padding: 14px 28px; font-size: 24px; font-weight: bold; letter-spacing: 8px; border-radius: 6px;">
+              <div style="display: inline-block; background: linear-gradient(to right, #194EB4, #AC67DE); color: white; padding: 14px 28px; font-size: 24px; font-weight: bold; letter-spacing: 8px; border-radius: 6px;">
                 ${otp}
               </div>
             </div>

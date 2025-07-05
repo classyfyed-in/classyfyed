@@ -23,7 +23,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string>("")
   const router = useRouter()
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
-  const otpInputs = useRef<(HTMLInputElement | null)[]>([])
+  const otpInputs = useRef<HTMLInputElement[]>(Array(4).fill(null))
 
   const handleSendOtp = async () => {
     // Validate email
@@ -133,15 +133,15 @@ export default function LoginPage() {
     setError("")
 
     // Move to next input if value is entered
-    if (value && index < 3) {
-      otpInputs.current[index + 1]?.focus()
+    if (value && index < 3 && otpInputs.current[index + 1]) {
+      otpInputs.current[index + 1].focus()
     }
   }
 
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     // Move to previous input on backspace if empty
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      otpInputs.current[index - 1]?.focus()
+    if (e.key === "Backspace" && !otp[index] && index > 0 && otpInputs.current[index - 1]) {
+      otpInputs.current[index - 1].focus()
     }
   }
 
@@ -197,13 +197,17 @@ export default function LoginPage() {
                         {[0, 1, 2, 3].map((index) => (
                           <Input
                             key={index}
-                            ref={(el: HTMLInputElement | null) => (otpInputs.current[index] = el)}
+                            ref={(el: HTMLInputElement | null) => {
+                              if (el) {
+                                otpInputs.current[index] = el
+                              }
+                            }}
                             className="w-12 text-center"
                             maxLength={1}
                             value={otp[index] || ""}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOtpDigitChange(index, e.target.value)}
                             onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleOtpKeyDown(index, e)}
-                            placeholder="-"
+                           placeholder="-"
                             type="text"
                             inputMode="numeric"
                             pattern="[0-9]*"
