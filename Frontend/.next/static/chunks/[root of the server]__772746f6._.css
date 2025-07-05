@@ -571,10 +571,6 @@
     }
   }
 
-  .m-2 {
-    margin: calc(var(--spacing) * 2);
-  }
-
   .-mx-1 {
     margin-inline: calc(var(--spacing) * -1);
   }

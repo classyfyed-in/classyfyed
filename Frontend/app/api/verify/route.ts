@@ -29,6 +29,8 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    await user.deleteOne({ email });
+
     return NextResponse.redirect(new URL('/thank-you', req.url));
   } catch (err) {
     console.error(err);

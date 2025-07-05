@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
@@ -13,16 +13,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 
 export default function LoginPage() {
-  const [otpSent, setOtpSent] = useState(false)
-  const [email, setEmail] = useState("")
-  const [otp, setOtp] = useState("")
-  const [adminUserId, setAdminUserId] = useState("")
-  const [adminPassword, setAdminPassword] = useState("")
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [dialogMessage, setDialogMessage] = useState("")
-  const [error, setError] = useState("")
+  const [otpSent, setOtpSent] = useState<boolean>(false)
+  const [email, setEmail] = useState<string>("")
+  const [otp, setOtp] = useState<string>("")
+  const [adminUserId, setAdminUserId] = useState<string>("")
+  const [adminPassword, setAdminPassword] = useState<string>("")
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [dialogMessage, setDialogMessage] = useState<string>("")
+  const [error, setError] = useState<string>("")
   const router = useRouter()
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+  const otpInputs = useRef<(HTMLInputElement | null)[]>([])
 
   const handleSendOtp = async () => {
     // Validate email
@@ -32,22 +33,16 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/api/auth/users/email/${encodeURIComponent(email)}`, {
-        method: "GET",
+      const response = await fetch(`/api/send-otp`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
       })
       const data = await response.json()
       console.log("LoginPage - Fetched user by email:", data)
 
       if (!data.success) {
         setDialogMessage("User not registered or rejected")
-        setDialogOpen(true)
-        return
-      }
-
-      const { user } = data
-      if (!user.isVerified) {
-        setDialogMessage("Verification still pending")
         setDialogOpen(true)
         return
       }
@@ -64,7 +59,7 @@ export default function LoginPage() {
 
   const handleSignIn = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/api/auth/signin`, {
+      const response = await fetch(`/api/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
@@ -127,9 +122,27 @@ export default function LoginPage() {
     setError("")
   }
 
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setOtp(e.target.value)
+  const handleOtpDigitChange = (index: number, value: string) => {
+    // Allow only single digit
+    if (value.length > 1 || (value && !/^[0-9]$/.test(value))) return
+
+    // Update OTP state
+    const newOtp = otp.split("")
+    newOtp[index] = value
+    setOtp(newOtp.join(""))
     setError("")
+
+    // Move to next input if value is entered
+    if (value && index < 3) {
+      otpInputs.current[index + 1]?.focus()
+    }
+  }
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Move to previous input on backspace if empty
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      otpInputs.current[index - 1]?.focus()
+    }
   }
 
   return (
@@ -179,23 +192,34 @@ export default function LoginPage() {
 
                   {otpSent && (
                     <div className="space-y-2">
-                      <Label htmlFor="otp">OTP Verification</Label>
-                      <Input
-                        id="otp"
-                        placeholder="Enter OTP sent to your email"
-                        value={otp}
-                        onChange={handleOtpChange}
-                      />
+                      <Label>OTP Verification</Label>
+                      <div className="flex space-x-2">
+                        {[0, 1, 2, 3].map((index) => (
+                          <Input
+                            key={index}
+                            ref={(el: HTMLInputElement | null) => (otpInputs.current[index] = el)}
+                            className="w-12 text-center"
+                            maxLength={1}
+                            value={otp[index] || ""}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOtpDigitChange(index, e.target.value)}
+                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleOtpKeyDown(index, e)}
+                            placeholder="-"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                          />
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
-                <Button className="w-full" disabled={!otpSent || !otp} onClick={handleSignIn}>
+                <Button className="w-full" disabled={otp.length !== 4} onClick={handleSignIn}>
                   Sign In
                 </Button>
                 <div className="text-center text-sm">
-                  Don&apos;t have an account?{" "}
+                  Don`&apos;`t have an account?{" "}
                   <Link href="/auth/register" className="text-blue-600 hover:underline">
                     Register now
                   </Link>
