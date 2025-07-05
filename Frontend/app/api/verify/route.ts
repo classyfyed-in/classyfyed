@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { decrypt } from '@/lib/encryption';
 import { connectToDB } from '@/lib/mongodb';
 import Verify from '@/models/Verify';
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const token = searchParams.get('token');
@@ -28,8 +29,6 @@ export async function GET(req: Request) {
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
-
-    await user.deleteOne({ email });
 
     return NextResponse.redirect(new URL('/thank-you', req.url));
   } catch (err) {

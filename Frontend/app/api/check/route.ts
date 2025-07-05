@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     }
 
     if (verify.isVerified) {
+      await verify.deleteOne({ email });
       return NextResponse.json({ success: true, message: 'Email already verified' }, { status: 200 });
     } else {
       return NextResponse.json({ success: false, message: 'Email not verified yet' }, { status: 200 });

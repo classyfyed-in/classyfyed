@@ -1450,7 +1450,6 @@ export default function RegisterPage() {
   const [isTncDialogOpen, setIsTncDialogOpen] = useState(true)
   const [verificationStatus, setVerificationStatus] = useState("idle") // idle, sent, verified, error
   const [verificationError, setVerificationError] = useState("") // Added to store verification error message
-  const [isVerificationDialogOpen, setIsVerificationDialogOpen] = useState(false)
   const [isInstituteDropdownOpen, setIsInstituteDropdownOpen] = useState(false)
   const [filteredInstitutes, setFilteredInstitutes] = useState(institutes)
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
@@ -1546,7 +1545,6 @@ export default function RegisterPage() {
       })
       const data = await response.json()
       if (data.success) {
-        setIsVerificationDialogOpen(true)
         setVerificationError("")
         toast({
           title: "Verified!",
@@ -1573,31 +1571,6 @@ export default function RegisterPage() {
     }
   }
 
-  const handleVerificationDialogClose = async () => {
-    setVerificationStatus("verified")
-    setIsVerificationDialogOpen(false)
-    
-    try {
-      const response = await fetch('/api/delete', {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: formData.email })
-      })
-      const data = await response.json()
-      if (!data.success) {
-        console.error("RegisterPage - Error deleting verification record:", data.message || "Unknown error")
-      }
-    } catch (error) {
-      console.error("RegisterPage - Error deleting verification record:", error)
-      setVerificationStatus("error")
-      setVerificationError("Error deleting verification record")
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Error deleting verification record",
-      })
-    }
-  }
 
   const handleNextStep = () => {
     if (verificationStatus !== "verified") {
@@ -2229,20 +2202,6 @@ export default function RegisterPage() {
                 onClick={() => window.open('https://www.reddit.com/user/classyfyed/', '_blank', 'noopener,noreferrer')}
               />
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isVerificationDialogOpen} onOpenChange={setIsVerificationDialogOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-lg">Email Verified</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-sm">Your email has been successfully verified.</p>
-            <Button onClick={handleVerificationDialogClose} className="w-full">
-              OK
-            </Button>
           </div>
         </DialogContent>
       </Dialog>
