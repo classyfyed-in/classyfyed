@@ -20,6 +20,8 @@
 # next.js
 /.next/
 /out/
+./Frontend/.next/
+/Frontend/.next/
 
 # production
 /build

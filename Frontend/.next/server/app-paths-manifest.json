@@ -8,6 +8,7 @@
   "/api/verify-otp/route": "app/api/verify-otp/route.js",
   "/auth/login/page": "app/auth/login/page.js",
   "/auth/register/page": "app/auth/register/page.js",
+  "/cart/page": "app/cart/page.js",
   "/page": "app/page.js",
   "/user/dashboard/page": "app/user/dashboard/page.js"
 }
